@@ -143,7 +143,7 @@ export default function Console() {
             <>
               <h1>One goal. A team of agents working on it.</h1>
               <p>
-                An orchestrator splits your goal into tasks. Specialist agents run them in parallel, calling real tools, and hand their results back. Every
+                An orchestrator splits your goal into tasks and picks from eleven specialist agents. They work in parallel, call real tools, and hand their results back. Every
                 step shows up here as it happens.
               </p>
             </>

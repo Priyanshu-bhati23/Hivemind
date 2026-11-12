@@ -4,7 +4,7 @@ Give one goal to a team of AI agents and watch them work. An orchestrator plans 
 
 ## What it does
 
-1. **Plan**: the orchestrator splits your goal into 3 to 5 tasks, assigns each to an agent, and declares which tasks depend on which.
+1. **Plan**: the orchestrator splits your goal into 3 to 6 tasks, assigns each to an agent, and declares which tasks depend on which.
 2. **Run**: tasks run as a dependency graph. Independent tasks run in parallel. Each agent can call tools, read the results, and call more.
 3. **Answer**: the orchestrator combines the agents' reports into one streamed answer.
 
@@ -21,6 +21,14 @@ The 3D hive and the log are two views of the same event stream: cells rise while
 | Engineer | Designs the technical approach |
 | Writer | Turns findings into clear prose |
 | Critic | Checks the work for gaps |
+| Strategist | Weighs the options and picks a direction |
+| Product lead | Turns the goal into requirements and priorities |
+| Designer | Shapes how people will use it |
+| Fact checker | Verifies claims against Wikipedia |
+| Risk officer | Finds what could go wrong |
+| Explainer | Explains it simply, with an example |
+
+The orchestrator chooses which of the eleven to use for each goal, so most runs involve three to six of them.
 
 | Tool | What it does |
 | --- | --- |

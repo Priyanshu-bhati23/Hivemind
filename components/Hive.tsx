@@ -7,8 +7,9 @@ import { AGENTS, ORCHESTRATOR_COLOR } from "@/lib/agents";
 import type { RunState, Signal } from "@/lib/run-state";
 
 /**
- * The hive: a honeycomb board where the centre cell is the orchestrator and the
- * six cells around it are the five agents and the final answer. Cells rise and
+ * The hive: a honeycomb board where the centre cell is the orchestrator. The
+ * six cells around it are five agents and the final answer, and six more
+ * agents sit on the corners of the next ring. Cells rise and
  * take colour as their agent works, and packets fly between cells for every
  * hand-off. All of it is driven by the same run state as the log.
  */
@@ -41,6 +42,16 @@ const RING_ONE: Array<[number, number, Role]> = [
   [-1, 1, "critic"],
 ];
 
+/** Axial positions of the six corner cells of the second ring. */
+const RING_TWO: Array<[number, number, Role]> = [
+  [2, 0, "strategist"],
+  [2, -2, "product"],
+  [0, -2, "designer"],
+  [-2, 0, "factchecker"],
+  [-2, 2, "risk"],
+  [0, 2, "explainer"],
+];
+
 function buildCells(): Cell[] {
   const cells: Cell[] = [];
   for (let q = -3; q <= 3; q++) {
@@ -51,6 +62,9 @@ function buildCells(): Cell[] {
       if (ring === 0) role = "orchestrator";
       else if (ring === 1)
         role = RING_ONE.find(([a, b]) => a === q && b === r)![2];
+      else if (ring === 2)
+        role =
+          RING_TWO.find(([a, b]) => a === q && b === r)?.[2] ?? "filler";
       const agent = AGENTS.find((a) => a.id === role);
       cells.push({
         role,

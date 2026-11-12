@@ -7,7 +7,7 @@ import type { AgentId, RunEvent, Task } from "@/lib/types";
 
 export const maxDuration = 60;
 
-const MAX_TASKS = 5;
+const MAX_TASKS = 6;
 const MAX_TOOL_ROUNDS = 3;
 const PARALLEL = 3;
 
@@ -20,7 +20,8 @@ Rules:
 - Each task goes to exactly one agent and must be doable in a few sentences of output.
 - Give tasks ids "t1", "t2", and so on.
 - "dependsOn" lists the ids of earlier tasks whose output this task needs. Tasks with no dependencies run in parallel, so only add a dependency when the task really needs that output.
-- Use the researcher for facts, the analyst for numbers, and finish with a writer or critic task that depends on the others when that helps.
+- Pick the agents that fit this goal. Use the researcher for facts, the analyst for numbers, and the others where their speciality is needed. Do not use an agent just because it exists.
+- Use each agent at most once. Finish with a writer, critic, explainer or fact checker task that depends on the others when that helps.
 - "title" is at most 6 words. "brief" is one or two sentences telling the agent exactly what to produce.
 
 Reply with JSON: {"tasks": [{"id": "t1", "agent": "researcher", "title": "...", "brief": "...", "dependsOn": []}]}`;

@@ -1,4 +1,15 @@
-export type AgentId = "researcher" | "analyst" | "engineer" | "writer" | "critic";
+export type AgentId =
+  | "researcher"
+  | "analyst"
+  | "engineer"
+  | "writer"
+  | "critic"
+  | "strategist"
+  | "designer"
+  | "factchecker"
+  | "explainer"
+  | "risk"
+  | "product";
 
 export interface Task {
   id: string;
