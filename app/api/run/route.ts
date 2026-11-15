@@ -151,6 +151,11 @@ export async function POST(req: Request) {
 
           for (let round = 0; ; round++) {
             const lastRound = round >= MAX_TOOL_ROUNDS;
+            // On the last round the tools are removed entirely. Setting tool_choice to "none"
+            // is not enough: the model can still try a call, and Groq rejects the request.
+            if (lastRound) {
+              messages.push({ role: "user", content: "That is enough research. Write your answer now from what you found, without calling any more tools." });
+            }
             const reply = await chat(
               {
                 model: MODELS.fast,
@@ -159,8 +164,7 @@ export async function POST(req: Request) {
                 reasoning_effort: "low",
                 include_reasoning: false,
                 messages,
-                tools: TOOL_SCHEMAS,
-                tool_choice: lastRound ? "none" : "auto",
+                ...(lastRound ? {} : { tools: TOOL_SCHEMAS, tool_choice: "auto" }),
               },
               { signal: req.signal, onWait },
             );

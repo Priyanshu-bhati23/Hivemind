@@ -2,7 +2,7 @@ import { Fragment, type ReactNode } from "react";
 
 /**
  * A small Markdown renderer for model output: paragraphs, headings, lists,
- * fenced code, inline code and bold. It builds React nodes directly, so model
+ * tables, fenced code, inline code and bold. It builds React nodes directly, so model
  * text is never injected as HTML.
  */
 
@@ -55,6 +55,44 @@ export function Markdown({ text, onPath }: { text: string; onPath?: (path: strin
       continue;
     }
 
+    // A table: a row of cells, then a separator row of dashes.
+    if (/^\s*\|.*\|\s*$/.test(line) && i + 1 < lines.length && /^\s*\|?\s*:?-{2,}/.test(lines[i + 1])) {
+      const cells = (row: string) =>
+        row
+          .trim()
+          .replace(/^\|/, "")
+          .replace(/\|$/, "")
+          .split("|")
+          .map((cell) => cell.trim());
+      const head = cells(line);
+      i += 2;
+      const rows: string[][] = [];
+      while (i < lines.length && /^\s*\|.*\|\s*$/.test(lines[i])) rows.push(cells(lines[i++]));
+      blocks.push(
+        <div className="md-table" key={blocks.length}>
+          <table>
+            <thead>
+              <tr>
+                {head.map((cell, n) => (
+                  <th key={n}>{inline(cell, onPath)}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, r) => (
+                <tr key={r}>
+                  {row.map((cell, n) => (
+                    <td key={n}>{inline(cell, onPath)}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>,
+      );
+      continue;
+    }
+
     if (/^\s*([-*]|\d+[.)])\s+/.test(line)) {
       const ordered = /^\s*\d+[.)]\s+/.test(line);
       const items: string[] = [];
@@ -84,6 +122,7 @@ export function Markdown({ text, onPath }: { text: string; onPath?: (path: strin
       lines[i].trim() &&
       !lines[i].trim().startsWith("```") &&
       !/^(#{1,4})\s+/.test(lines[i]) &&
+      !/^\s*\|.*\|\s*$/.test(lines[i]) &&
       !/^\s*([-*]|\d+[.)])\s+/.test(lines[i])
     ) {
       para.push(lines[i++]);
